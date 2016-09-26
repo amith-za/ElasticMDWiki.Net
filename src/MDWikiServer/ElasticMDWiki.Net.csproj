@@ -136,6 +136,10 @@
     <None Include="packages.config" />
     <EmbeddedResource Include="StaticContent\404.md" />
     <EmbeddedResource Include="StaticContent\config.json" />
+    <EmbeddedResource Include="StaticContent\fonts\glyphicons-halflings-regular.eot" />
+    <EmbeddedResource Include="StaticContent\fonts\glyphicons-halflings-regular.ttf" />
+    <EmbeddedResource Include="StaticContent\fonts\glyphicons-halflings-regular.woff" />
+    <EmbeddedResource Include="StaticContent\fonts\glyphicons-halflings-regular.woff2" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="StaticContent\index.html" />
@@ -144,6 +148,11 @@
     <EmbeddedResource Include="StaticContent\editor.html" />
     <EmbeddedResource Include="StaticContent\scripts\jquery.js" />
     <EmbeddedResource Include="StaticContent\scripts\knockout.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="StaticContent\css\bootstrap.min.css" />
+    <EmbeddedResource Include="StaticContent\fonts\glyphicons-halflings-regular.svg" />
+    <EmbeddedResource Include="StaticContent\scripts\bootstrap.min.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

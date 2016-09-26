@@ -4,19 +4,51 @@
 <head>
     <meta charset="utf-8" />
     <title></title>
-    <script type="text/javascript" src="scripts/jquery.js"></script>
-    <script type="text/javascript" src="scripts/knockout.js"></script>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-
-    <div id="editor">
-        <input type="text" data-bind="value: page, valueUpdate: 'keyup'">.md
-        <textarea style="width:800px;height:600px" data-bind="value: text, valueUpdate: 'keyup'"></textarea>
-        <input type="button" data-bind="click:submit" value="Save" />
+    <div id="editor" class="container-fluid">
+        <div class="row">
+            <div class="col-lg-6">
+                <form class="form-inline">
+                    <div class="form-group">
+                        <label for="filename">File Name</label>
+                        <input type="text" class="form-control input-sm" id="filename" placeholder="File Name" data-bind="value: page, valueUpdate: 'keyup'">.md
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-5">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <div class="col-lg-5" style="height:600px; width:600px">
+                            <textarea class="form-control" style="height:inherit; resize:none" data-bind="value: text, valueUpdate: 'keyup'"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-7">
+                <div class="panel panel-success">
+                    <div class="panel-heading">Preview</div>
+                    <div class="panel-body">
+                        Preview will go here
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-5">
+                <input class="btn btn-primary" type="button" data-bind="click:save" value="Save" />
+                <input class="btn btn-danger" type="button" data-bind="click:cancel" value="Cancel" />
+            </div>
+        </div>
     </div>
 
+    <script type="text/javascript" src="scripts/jquery.js"></script>
+    <script type="text/javascript" src="scripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="scripts/knockout.js"></script>
     <script type="text/javascript">
-
         function getQueryVariable(variable) {
             var query = window.location.search.substring(1);
             var vars = query.split('&');
@@ -48,7 +80,7 @@
             }
         });
 
-        viewModel.submit = function () {
+        viewModel.save = function () {
 
             var posturl = "markdown/" + viewModel.page();
             var payload = { text: viewModel.text() };
@@ -62,6 +94,10 @@
             }).done(function (data) {
                 window.location = "/index.html#!" + viewModel.page() + ".md";
             });
+        };
+
+        viewModel.cancel = function () {
+            window.location = "/index.html#!" + viewModel.page() + ".md";
         };
 
         var editor = document.getElementById("editor");
