@@ -34,6 +34,29 @@ namespace ElasticMDWiki.Net
             return response.Source;
         }
 
+        public List<Content> GetAll(int skip, int take)
+        {
+            var client = CreateClient();
+
+            var response = client.Search<Content>(
+                s => s.Index(indexName)
+                      .Type(typeName)
+                      .MatchAll()
+                      .Skip(skip)
+                      .Take(take));
+
+            if (response.ApiCall.HttpStatusCode != 200)
+            {
+                throw new Exception(response.ApiCall.HttpStatusCode.ToString());
+            }
+
+            return response.Hits.Select(h =>
+            {
+                h.Source.Version = h.Version.HasValue ? h.Version.Value : 0;
+                return h.Source;
+            }).ToList();
+        }
+
         public void Update(Content document)
         {
             var client = CreateClient();

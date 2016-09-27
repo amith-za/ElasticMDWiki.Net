@@ -119,6 +119,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\SwaggerConfig.cs" />
+    <Compile Include="Controllers\ContentItemsController.cs" />
     <Compile Include="Controllers\MarkdownController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\UploadMarkdownRequest.cs" />
@@ -153,6 +154,9 @@
     <EmbeddedResource Include="StaticContent\css\bootstrap.min.css" />
     <EmbeddedResource Include="StaticContent\fonts\glyphicons-halflings-regular.svg" />
     <EmbeddedResource Include="StaticContent\scripts\bootstrap.min.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="StaticContent\file-explorer.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
