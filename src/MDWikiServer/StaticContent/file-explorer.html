@@ -22,7 +22,8 @@
                         <td><span data-bind="text: fileName"></span></td>
                         <td><span data-bind="text: lastModified"></span></td>
                         <td>
-                        <!--<input data-bind="click: $root.delete" class="btn btn-danger" type="button" value="Delete"><input data-bind="click: $root.update" class="btn btn-warning" type="button" value="Update">-->
+                            <input data-bind="click: $root.delete" class="btn btn-danger" type="button" value="Delete">
+                            <!--<input data-bind="click: $root.update" class="btn btn-warning" type="button" value="Update">-->
                         </td>
                     </tr>
                 </tbody>
@@ -59,18 +60,28 @@
 
         var geturl = "content-items?take=1000";
 
-        $.ajax({
-            type: "GET",
-            url: geturl,
-            success: function (data) {
-                for (var i = 0; i < data.length; i++) {
-                    viewModel.files.push(data[i]);
+        viewModel.refresh = function () {
+            viewModel.files([]);
+            $.ajax({
+                type: "GET",
+                url: geturl,
+                success: function (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        viewModel.files.push(data[i]);
+                    }
                 }
-            }
-        });
+            });
+        };
 
         viewModel.delete = function (data) {
-            alert("delete : " + JSON.stringify(data));
+            //alert("delete : " + JSON.stringify(data));
+            $.ajax({
+                type: "DELETE",
+                url: "/content-items/" + data.fileName,
+            }).done(function (data) {
+                alert("file deleted");
+                viewModel.refresh();
+            });
         };
 
         viewModel.update = function (data) {
@@ -78,28 +89,28 @@
         };
 
         viewModel.upload = function () {
-                var data = new FormData();
+            var data = new FormData();
 
-                var files = $("#fileupload").get(0).files;
+            var files = $("#fileupload").get(0).files;
 
-                if (files.length > 0) {
-                    data.append("UploadedImage", files[0]);
+            if (files.length > 0) {
+                data.append("UploadedImage", files[0]);
+            }
+
+            var ajaxRequest = $.ajax({
+                type: "POST",
+                url: "/content-items?take=1000",
+                contentType: false,
+                processData: false,
+                data: data
+            });
+
+            ajaxRequest.done(function (xhr, textStatus) {
+                if (textStatus == "success") {
+                    alert("File Uploaded");
+                    viewModel.refresh();
                 }
-
-                var ajaxRequest = $.ajax({
-                    type: "POST",
-                    url: "/content-items?take=1000",
-                    contentType: false,
-                    processData: false,
-                    data: data
-                });
-
-                ajaxRequest.done(function (xhr, textStatus) {
-
-                    if (textStatus == "success") {
-                        alert("File Uploaded");
-                    }
-                });
+            });
         };
 
         //viewModel.save = function () {
@@ -121,6 +132,8 @@
         var contentPanel = document.getElementById("contentPanel");
 
         ko.applyBindings(viewModel, contentPanel);
+
+        viewModel.refresh();
     </script>
 </body>
 </html>

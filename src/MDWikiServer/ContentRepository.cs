@@ -18,12 +18,7 @@ namespace ElasticMDWiki.Net
             var client = CreateClient();
             var response =
                 client.Get<Content>(
-                    new GetRequest(indexName,
-                                   new TypeName()
-                                   {
-                                       Type = typeof(Content),
-                                       Name = typeName
-                                   }, new Id(fileName)));
+                    new GetRequest(indexName, typeName, fileName));
 
             if (response.ApiCall.HttpStatusCode != 200 &
                 response.ApiCall.HttpStatusCode != 404)
@@ -69,6 +64,38 @@ namespace ElasticMDWiki.Net
             {
                 throw new Exception($"Failed to save '{document.Name}'");
             }
+        }
+
+        public void Delete(string path)
+        {
+            var client = CreateClient();
+
+            var response =
+                client.Delete(new DeleteRequest(indexName, typeName, path));
+
+            if (response.ApiCall.HttpStatusCode != 200)
+            {
+                throw new Exception($"Failed to delete '{path}', response code {response?.ApiCall?.HttpStatusCode}");
+            }
+        }
+
+        public bool Exists(string path)
+        {
+            var client = CreateClient();
+
+            var response = client.DocumentExists(new DocumentExistsRequest(indexName, new TypeName()
+            {
+                Type = typeof(Content),
+                Name = typeName
+            },
+            new Id(path)));
+
+            if (response.ApiCall.HttpStatusCode != 200)
+            {
+                throw new Exception($"Failed to check if document '{path}' exists");
+            }
+
+            return response.Exists;
         }
 
         ElasticClient CreateClient()

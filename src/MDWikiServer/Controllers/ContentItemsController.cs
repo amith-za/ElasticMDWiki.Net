@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -44,10 +45,11 @@ namespace ElasticMDWiki.Net.Controllers
             foreach (var file in provider.Contents)
             {
                 var filename = file.Headers.ContentDisposition.FileName.Trim('\"');
+                var fileInfo = new FileInfo(filename);
                 var buffer = await file.ReadAsByteArrayAsync();
                 ContentRepository.Update(new Content()
                 {
-                    Name = filename,
+                    Name = fileInfo.Name,
                     ContentBytes = buffer,
                     LastModified = DateTime.UtcNow,
                     PhysicalPath = $"es://{filename}",
@@ -57,5 +59,19 @@ namespace ElasticMDWiki.Net.Controllers
 
             return Ok();
         }
+
+        [HttpDelete]
+        [Route("{*path}")]
+        public IHttpActionResult Delete(string path)
+        {
+            if(!ContentRepository.Exists(path))
+            {
+                return NotFound();
+            }
+
+            ContentRepository.Delete(path);
+
+            return Ok();
+        } 
     }
 }
