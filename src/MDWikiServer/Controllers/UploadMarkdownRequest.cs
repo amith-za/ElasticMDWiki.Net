@@ -9,5 +9,7 @@ namespace ElasticMDWiki.Net.Controllers
     public class UploadMarkdownRequest
     {
         public string Text { get; set; }
+
+        public string[] Tags { get; set; }
     }
 }

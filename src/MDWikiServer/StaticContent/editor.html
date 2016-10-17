@@ -38,6 +38,13 @@
             </div>
         </div>
         <div class="row">
+            <div data-bind="foreach: { data: tags, as : 'tag'}">
+                <input type="text" data-bind="value: tag.value" />
+                <input class="btn btn-danger" type="button" data-bind="click:$root.removeTag" value="X" />
+            </div>
+            <input class="btn btn-primary" type="button" data-bind="click:addTag" value="Add Tag" />
+        </div>
+        <div class="row">
             <div class="col-lg-5">
                 <input class="btn btn-primary" type="button" data-bind="click:save" value="Save" />
                 <input class="btn btn-danger" type="button" data-bind="click:cancel" value="Cancel" />
@@ -63,7 +70,8 @@
 
         var viewModel = {
             page: ko.observable(),
-            text: ko.observable()
+            text: ko.observable(),
+            tags: ko.observableArray([])
         };
 
         var page = getQueryVariable("page");
@@ -77,13 +85,20 @@
             url: geturl,
             success: function (data) {
                 viewModel.text(data.text);
+                for (var i = 0; i < data.tags.length; i++) {
+                    viewModel.tags.push({ value: data.tags[i] });
+                }
             }
         });
 
         viewModel.save = function () {
 
             var posturl = "markdown/" + viewModel.page();
-            var payload = { text: viewModel.text() };
+            var payload = { text: viewModel.text(), tags: [] };
+            var tags = viewModel.tags();
+            for (var i = 0; i < tags.length; i++) {
+                payload.tags.push(tags[i].value);
+            }
 
             $.ajax({
                 type: "POST",
@@ -98,6 +113,14 @@
 
         viewModel.cancel = function () {
             window.location = "/index.html#!" + viewModel.page() + ".md";
+        };
+
+        viewModel.addTag = function () {
+            viewModel.tags.push("");
+        };
+
+        viewModel.removeTag = function (data) {
+            viewModel.tags.remove(data);
         };
 
         var editor = document.getElementById("editor");

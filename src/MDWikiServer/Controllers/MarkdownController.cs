@@ -44,17 +44,21 @@ namespace ElasticMDWiki.Net.Controllers
                 markdown = ASCIIEncoding.UTF8.GetString(doc.ContentBytes);
             }
 
-            response = Request.CreateResponse(HttpStatusCode.OK, new { text = markdown });
+            response = Request.CreateResponse(HttpStatusCode.OK, new { text = markdown, tags = doc.Tags });
             response.Content.Headers.ContentType.MediaType = "application/json";
 
             return response;
         }
 
-
         [HttpPost]
         [Route("{*path}")]
-        public HttpResponseMessage Post(string path, [FromBody]UploadMarkdownRequest request)
+        public IHttpActionResult Post(string path, [FromBody]UploadMarkdownRequest request)
         {
+            if (request == null)
+            {
+                return BadRequest("null request");
+            }
+
             if (!string.Equals(".md", Path.GetExtension(path)))
             {
                 path += ".md";
@@ -67,10 +71,11 @@ namespace ElasticMDWiki.Net.Controllers
                 ContentText = request.Text,
                 LastModified = DateTime.UtcNow,
                 PhysicalPath = $"es://{path}",
-                Version = 0
+                Version = 0,
+                Tags = request.Tags.ToList()
             });
 
-            return Request.CreateResponse(HttpStatusCode.OK, new { status = "sucess" });
+            return Ok(new { status = "sucess" });
         }
     }
 }

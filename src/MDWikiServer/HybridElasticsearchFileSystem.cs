@@ -53,6 +53,17 @@ namespace ElasticMDWiki.Net
 
                     var bytes = new List<byte>();
                     bytes.AddRange(content.ContentBytes);
+                    if (content.Tags != null)
+                    {
+                        bytes.AddRange(ASCIIEncoding.UTF8.GetBytes("\n\nTagged : "));
+
+                        for (int i = 0; i < content.Tags.Count - 1; i++)
+                        {
+                            bytes.AddRange(ASCIIEncoding.UTF8.GetBytes($" [{content.Tags[i]}](), "));
+                        }
+
+                        bytes.AddRange(ASCIIEncoding.UTF8.GetBytes($" [{content.Tags[content.Tags.Count - 1]}]() "));
+                    }
                     bytes.AddRange(ASCIIEncoding.UTF8.GetBytes(editorlink));
                     content.ContentBytes = bytes.ToArray();
                 }

@@ -38,6 +38,8 @@ namespace ElasticMDWiki.Net
 
         public long Version { get; set; }
 
+        public List<string> Tags { get; set; }
+
         public Stream CreateReadStream()
         {
             return new MemoryStream(ContentBytes);
