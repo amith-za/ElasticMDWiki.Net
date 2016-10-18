@@ -39,7 +39,7 @@
         </div>
         <div class="row">
             <div data-bind="foreach: { data: tags, as : 'tag'}">
-                <input type="text" data-bind="value: tag.value" />
+                <input type="text" data-bind="value: tag.value, valueUpdate: 'keyup'" />
                 <input class="btn btn-danger" type="button" data-bind="click:$root.removeTag" value="X" />
             </div>
             <input class="btn btn-primary" type="button" data-bind="click:addTag" value="Add Tag" />
@@ -116,7 +116,7 @@
         };
 
         viewModel.addTag = function () {
-            viewModel.tags.push("");
+            viewModel.tags.push({value:""});
         };
 
         viewModel.removeTag = function (data) {

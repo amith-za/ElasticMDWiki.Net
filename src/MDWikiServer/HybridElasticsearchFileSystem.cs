@@ -53,7 +53,7 @@ namespace ElasticMDWiki.Net
 
                     var bytes = new List<byte>();
                     bytes.AddRange(content.ContentBytes);
-                    if (content.Tags != null)
+                    if (content.Tags?.Count > 0)
                     {
                         bytes.AddRange(ASCIIEncoding.UTF8.GetBytes("\n\nTagged : "));
 
